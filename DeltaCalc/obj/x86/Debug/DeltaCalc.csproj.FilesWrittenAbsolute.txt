@@ -1,0 +1,5 @@
+/home/vadik/Projects/DeltaCalc/DeltaCalc/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/vadik/Projects/DeltaCalc/DeltaCalc/bin/Debug/DeltaCalc.pdb
+/home/vadik/Projects/DeltaCalc/DeltaCalc/bin/Debug/DeltaCalc.exe
+/home/vadik/Projects/DeltaCalc/DeltaCalc/obj/x86/Debug/DeltaCalc.exe
+/home/vadik/Projects/DeltaCalc/DeltaCalc/obj/x86/Debug/DeltaCalc.pdb

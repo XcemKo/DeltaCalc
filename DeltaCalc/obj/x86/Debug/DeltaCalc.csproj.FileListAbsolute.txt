@@ -1,0 +1,9 @@
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\bin\Debug\DeltaCalc.exe
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\bin\Debug\DeltaCalc.pdb
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\obj\x86\Debug\DeltaCalc.csproj.CoreCompileInputs.cache
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\obj\x86\Debug\DeltaCalc.exe
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\obj\x86\Debug\DeltaCalc.pdb
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\bin\Debug\alglibnet2.dll
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\obj\x86\Debug\DeltaCalc.csprojResolveAssemblyReference.cache
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\bin\Debug\System.Numerics.Vectors.xml

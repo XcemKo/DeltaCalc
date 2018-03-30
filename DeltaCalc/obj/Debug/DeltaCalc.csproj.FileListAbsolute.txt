@@ -1,0 +1,7 @@
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\bin\Debug\DeltaCalc.exe.config
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\bin\Debug\DeltaCalc.exe
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\bin\Debug\DeltaCalc.pdb
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\obj\Debug\DeltaCalc.csprojResolveAssemblyReference.cache
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\obj\Debug\DeltaCalc.csproj.CoreCompileInputs.cache
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\obj\Debug\DeltaCalc.exe
+C:\Users\Xcem\source\repos\DeltaCalc\DeltaCalc\obj\Debug\DeltaCalc.pdb
