@@ -9,6 +9,8 @@ namespace DeltaCalc
 {   
     class Tower
     {
+
+        public static int maxRangeRnd = 5;
         public static DateTime programmBegin = new DateTime(2018, 03, 26,09,37,13);
 		private bool programmStart = false;
         
@@ -16,7 +18,7 @@ namespace DeltaCalc
         int id;
         List<Tower> visibleTowers;
         List<double> distance;
-		long delta { get;}
+		public long delta { get;}
 
 		public Tower(int _id, Vector2 _position) {
 			if (programmStart == false) {
@@ -45,18 +47,17 @@ namespace DeltaCalc
             return now;
         }
 
-        public List<Metka> Transfer(int packet) {
+        public List<Metka> Transfer(int packet, long timeStart) {
             List<Metka> ret = new List<Metka>();
-            long now = (DateTime.Now - programmBegin).Ticks + delta; /*1 такс = 100 наносеукндам, *10 переведем в микросекунды*/
-            
+            long now = timeStart + this.delta + Other.rnd.Next(maxRangeRnd); /* t + d + w*/
             ret.Add(new Metka(packet, id, id, now));
             for (int i = 0; i < visibleTowers.Count; i++)
             {
-                long towerTime = visibleTowers[i].getTime();/* + (long)( (distance[i]/Other.LightSpeed)*1000000d )*/
+                long towerTime = timeStart + visibleTowers[i].delta;
                 double disTime = (distance[i] / Other.LightSpeed)*10000000;
                 //Console.WriteLine("dis {0}-{1} -> {2}", id, visibleTowers[i].id, disTime);
-				//if(Other.rnd.Next(0,100) <80)/* Типо ошибка связи */
-                	ret.Add(new Metka(packet, id, visibleTowers[i].id, towerTime+(long)disTime));
+				if(Other.rnd.Next(0,100) <95)/* Типо ошибка связи */
+                	ret.Add(new Metka(packet, id, visibleTowers[i].id, towerTime + (long)disTime + Other.rnd.Next(maxRangeRnd)));
             }
             return ret;
         }

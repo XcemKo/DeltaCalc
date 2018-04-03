@@ -8,7 +8,9 @@ using System.Numerics;
 namespace DeltaCalc
 {
     class Program
-    {
+    {   
+        public static int N = 6;
+
         static void Main(string[] args)
         {
 
@@ -46,16 +48,31 @@ namespace DeltaCalc
             t5.SetTransition(ref t1); t5.SetTransition(ref t3); t5.SetTransition(ref t4);
             t6.SetTransition(ref t2);
 
-
             Center cnt = new Center(new List<Tower>(new Tower[] { t1, t2, t3, t4, t5, t6 }));
-            //System.Threading.Thread.Sleep(3000);
-            cnt.Opros(2);
-            cnt.PrintAll();
+            int count = Int32.Parse(Console.ReadLine());
+            if (count > 0)
+                cnt.Opros(count);
+            else
+                return;
+            //cnt.PrintAll();
             Console.WriteLine("******************");
             cnt.CalcKoef();
 
             cnt.printKoef();
             cnt.Delta();
+
+            cnt.Compare();
+
+            cnt.Opros(count*2);
+            //cnt.PrintAll();
+            Console.WriteLine("******************");
+            cnt.CalcKoef();
+
+            cnt.printKoef();
+            cnt.Delta();
+
+            cnt.Compare();
+
         }
     }
 }

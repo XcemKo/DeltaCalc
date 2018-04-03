@@ -42,6 +42,7 @@ namespace DeltaCalc
 		double[,] distance;
 		double[,] koef;
 		double[]  solKoef;
+        double[] solveDelta;
 		List<Metka> metki;
 		int currentTower;
 		int numberOfPacket;
@@ -53,7 +54,9 @@ namespace DeltaCalc
             distance = new double[size, size];
 			koef = new double[size, size];
 			solKoef = new double[size];
-			for (int i = 0; i < size; i++)
+            solveDelta = new double[size];
+
+            for (int i = 0; i < size; i++)
 			{
 				for (int j = 0; j < size; j++)
 				{
@@ -65,19 +68,21 @@ namespace DeltaCalc
 		}
 
 		public void Opros(int seances, int timeOut = 50){
+            long now = (DateTime.Now - Tower.programmBegin).Ticks;
             Console.WriteLine("Nachal opros - {0}", (DateTime.Now - Tower.programmBegin).Ticks);
 			for (int i = 0; i < seances;)
 			{
-				metki.AddRange(towers[currentTower].Transfer(numberOfPacket));
+				metki.AddRange(towers[currentTower].Transfer(numberOfPacket, now));
 				currentTower++; numberOfPacket++;
 				if (currentTower == size)
 				{
 					currentTower = 0;
 					i++;
 				}
-				System.Threading.Thread.Sleep(timeOut + Other.rnd.Next(-25, 25));
-			}
-
+                //System.Threading.Thread.Sleep(timeOut + Other.rnd.Next(-25, 25));
+                now += (timeOut + Other.rnd.Next(-25, 25))*10000;
+            }
+            Console.WriteLine("Проиведено сеансов {0}\t Пакетов-{1}", seances, numberOfPacket);
 		}
 
 		public void PrintAll(){
@@ -161,7 +166,17 @@ namespace DeltaCalc
             Console.Write("ret = { ");
             for (int i = 0; i < size-1; i++)    Console.Write("{0:00.0000}\t", ret[i]);
             Console.WriteLine("}");
+            for(int i=1;i<size;i++)
+                solveDelta[i] = ret[i-1];
             return ret;
+        }
+        public void Compare() {
+
+            for (int i = 0; i < size; i++)
+                Console.WriteLine("Отклонение {0:00.0000} {1:00.0000} {2:00.0000}", 
+                    towers[i].delta, 
+                    solveDelta[i],
+                    Math.Abs(towers[i].delta - solveDelta[i]));
         }
     }
 }
