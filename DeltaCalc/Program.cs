@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Numerics;
-
+//using System.Numerics;
+using System.IO;
 namespace DeltaCalc
 {
     class Program
-    {   
+    {
         public static int N = 6;
+
+        static bool CheckLenght(string[] array)
+        {
+            int countLenght = 0;
+            for (int i = 8; i < 12; i++)
+                if (array[i].Length > 0)
+                    countLenght++;
+            return countLenght > 1 ? true : false;
+        }
 
         static void Main(string[] args)
         {
@@ -32,7 +41,7 @@ namespace DeltaCalc
                 t6 - t2
              */
             Console.WriteLine("Start");
-
+            /*
             Tower t1 = new Tower(1, new Vector2(0, 0));
             Tower t2 = new Tower(2, new Vector2(100, 100));
             Tower t3 = new Tower(3, new Vector2(-80, 70));
@@ -71,8 +80,40 @@ namespace DeltaCalc
             cnt.printKoef();
             cnt.Delta();
 
-            cnt.Compare();
+            cnt.Compare();*/
+            Tower t1 = new Tower(1, new Vector2(0, 0));
+            Tower t2 = new Tower(2, new Vector2(100, 100));
+            Tower t3 = new Tower(3, new Vector2(-80, 70));
+            Tower t4 = new Tower(4, new Vector2(50, -130));
 
+            Center cnt = new Center(new List<Tower>(new Tower[] { t1,t2,t3,t4}));
+
+            StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\DeltaCalc\\DeltaCalc\\log_associate.csv");
+            fs.ReadLine();
+            Console.WriteLine(fs);
+            string tmp;
+            int i = 0;
+            while (fs.Peek() != -1)
+            {
+                tmp = fs.ReadLine();
+                string[] array = tmp.Split(',');
+                if (CheckLenght(array))
+                {
+                    cnt.GetMetkiFromString(array); i++;
+                    if (i > 10) break;
+                }
+            }
+            cnt.PrintAll();
+            cnt.CalcKoef();
+
+            cnt.printKoef();
+
+
+
+
+            fs.Close();
         }
+
+
     }
 }

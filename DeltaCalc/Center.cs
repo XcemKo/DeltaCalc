@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Numerics;
+//using System.Numerics;
 
 namespace DeltaCalc
 {
@@ -48,6 +48,8 @@ namespace DeltaCalc
 		int numberOfPacket;
         int size;
 
+
+
 		public Center(List<Tower> _towers){
 			towers = _towers;
             size = towers.Count;
@@ -66,6 +68,25 @@ namespace DeltaCalc
 			numberOfPacket = 1;
 			metki = new List<Metka>();
 		}
+
+        private int minNumberTOwer = 7;
+
+        public void GetMetkiFromString(string [] str) {
+            List<Metka> ret = new List<Metka>();
+            int from = 8;
+            for (int i = 8; i < 12; i++)
+                if (str[i].Length != 0)
+                {
+                    from = i; ret.Add(new Metka(numberOfPacket, from- minNumberTOwer, from- minNumberTOwer, long.Parse(str[i])));
+                    break;
+                }
+            for (int i = from+1; i < 12; i++)
+                if (str[i].Length != 0)
+                {
+                    ret.Add(new Metka(numberOfPacket, from- minNumberTOwer, i- minNumberTOwer, long.Parse(str[i])));
+                }
+            metki.AddRange(ret); numberOfPacket++;
+        }
 
 		public void Opros(int seances, int timeOut = 50){
             long now = (DateTime.Now - Tower.programmBegin).Ticks;
