@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Numerics;
+using System.Numerics;
 using System.IO;
-namespace DeltaCalc
+using System.Globalization;
+
+namespace CsvParse
 {
     class Program
     {
@@ -14,7 +16,7 @@ namespace DeltaCalc
         static bool CheckLenght(string[] array)
         {
             int countLenght = 0;
-            for (int i = 8; i < 12; i++)
+            for (int i = 2; i < 14; i++)
                 if (array[i].Length > 0)
                     countLenght++;
             return countLenght > 1 ? true : false;
@@ -81,16 +83,55 @@ namespace DeltaCalc
             cnt.Delta();
 
             cnt.Compare();*/
-            Tower t1 = new Tower(1, new Vector2(0, 0));
-            Tower t2 = new Tower(2, new Vector2(100, 100));
-            Tower t3 = new Tower(3, new Vector2(-80, 70));
-            Tower t4 = new Tower(4, new Vector2(50, -130));
+            Vector2 coor1 = new Vector2(0, 0);          //src31_6
+            Vector2 coor2 = new Vector2(100, 100);      //src31_32
+            Vector2 coor3 = new Vector2(50, 130);       //src31_40
+            Vector2 coor4 = new Vector2(-150, -230);    //src31_130
+            Vector2 coor5 = new Vector2(50, -130);      //src31_132
+            Vector2 coor6 = new Vector2(0, -30);        //src31_134
+            //! @fixme исправить координаты
+            Tower3 src31_6_0 = new Tower3(new Vector3(coor1, 54.2328f));
 
-            Center cnt = new Center(new List<Tower>(new Tower[] { t1,t2,t3,t4}));
+            Tower3 src31_32_0 = new Tower3( new Vector3(coor2, 33.374f));
+            Tower3 src31_32_1 = new Tower3( new Vector3(coor2, 33.374f));
+            Tower3 src31_32_2 = new Tower3( new Vector3(coor2, 33.374f));
+            Tower3 src31_32_3 = new Tower3( new Vector3(coor2, 33.374f));
 
-            StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\DeltaCalc\\DeltaCalc\\log_associate.csv");
+            Tower3 src31_40_0 = new Tower3( new Vector3(coor3, 75.16f));
+
+            Tower3 src31_130_0 = new Tower3( new Vector3(coor4, 133.28f));
+
+            Tower3 src31_132_0 = new Tower3( new Vector3(coor5, 116.82f));
+            Tower3 src31_132_1 = new Tower3( new Vector3(coor5, 116.82f));
+            Tower3 src31_132_2 = new Tower3( new Vector3(coor5, 116.82f));
+            Tower3 src31_132_3 = new Tower3( new Vector3(coor5, 116.82f));
+
+            Tower3 src31_134_0 = new Tower3( new Vector3(coor6, 91.83f));
+
+            List<Tower3> towers = new List<Tower3>
+            {
+                src31_6_0,
+                src31_32_0,
+                src31_32_1,
+                src31_32_2,
+                src31_32_3,
+                src31_40_0,
+                src31_130_0,
+                src31_132_0,
+                src31_132_1,
+                src31_132_2,
+                src31_132_3,
+                src31_134_0
+            };
+
+            CenterParser Cntr = new CenterParser(towers);
+            var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+            culture.NumberFormat.NumberDecimalSeparator = ".";
+            Console.WriteLine(float.Parse("3.1488", culture));
+            //foreach (var tow in towers)
+            //    tow.Print();
+            StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\log8clean.csv");
             fs.ReadLine();
-            Console.WriteLine(fs);
             string tmp;
             int i = 0;
             while (fs.Peek() != -1)
@@ -99,14 +140,14 @@ namespace DeltaCalc
                 string[] array = tmp.Split(',');
                 if (CheckLenght(array))
                 {
-                    cnt.GetMetkiFromString(array); i++;
+                    Cntr.GetMetkiFromString(array); i++;
                     if (i > 10) break;
                 }
             }
-            cnt.PrintAll();
-            cnt.CalcKoef();
+            Cntr.PrintAll();
+            Cntr.CalcKoef();
 
-            cnt.printKoef();
+            Cntr.printKoef();
 
 
 

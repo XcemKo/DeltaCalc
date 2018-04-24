@@ -3,19 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Numerics;
+using System.Numerics;
 
-namespace DeltaCalc
+namespace CsvParse
 {
 
-    class Vector2 {
-        public double x, y;
-        public Vector2() { x = 0d; y = 0d; }
-        public Vector2(double _x, double _y) { x = _x; y = _y; }
-        static public double Distance(Vector2 r, Vector2 l) {
-            double ret = Math.Sqrt(Math.Pow((r.x - l.x),2)+ Math.Pow((r.y - l.y), 2));
-            return ret;
+    //class Vector2 {
+    //    public double x, y;
+    //    public Vector2() { x = 0d; y = 0d; }
+    //    public Vector2(double _x, double _y) { x = _x; y = _y; }
+    //    static public double Distance(Vector2 r, Vector2 l) {
+    //        double ret = Math.Sqrt(Math.Pow((r.x - l.x),2)+ Math.Pow((r.y - l.y), 2));
+    //        return ret;
+    //    }
+    //}
+
+    class Tower3 {
+        static private int id = 2;
+        private int privId;
+
+        public Vector3 position;
+
+        public Tower3(Vector3 _pos) {
+            privId = id++;
+            position = _pos;
         }
+
+        public void Print() {
+            Console.WriteLine("Tower #{0}\tpos - {1}", id, position.ToString());
+        }
+
     }
 
     class Tower
@@ -43,7 +60,7 @@ namespace DeltaCalc
             distance = new List<double>();
 
             if(id != 1) delta = Other.rnd.Next(5,25);
-            Console.WriteLine("Tower #{0}\tpos[{1},{2}]\t delta - {3}", id, position.x, position.y, delta);
+            //Console.WriteLine("Tower #{0}\tpos[{1},{2}]\t delta - {3}", id, position.x, position.y, delta);
         }
 
 

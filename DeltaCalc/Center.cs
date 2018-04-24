@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Numerics;
+using System.Numerics;
 
-namespace DeltaCalc
+namespace CsvParse
 {
 	static class Other
 	{
@@ -35,6 +35,8 @@ namespace DeltaCalc
                 Console.WriteLine("{0} {1}->{2}  -  {3}", packet, from, to, time);
 		}
 	}
+
+
 	/*************************/
 	class Center
 	{
@@ -68,25 +70,6 @@ namespace DeltaCalc
 			numberOfPacket = 1;
 			metki = new List<Metka>();
 		}
-
-        private int minNumberTOwer = 7;
-
-        public void GetMetkiFromString(string [] str) {
-            List<Metka> ret = new List<Metka>();
-            int from = 8;
-            for (int i = 8; i < 12; i++)
-                if (str[i].Length != 0)
-                {
-                    from = i; ret.Add(new Metka(numberOfPacket, from- minNumberTOwer, from- minNumberTOwer, long.Parse(str[i])));
-                    break;
-                }
-            for (int i = from+1; i < 12; i++)
-                if (str[i].Length != 0)
-                {
-                    ret.Add(new Metka(numberOfPacket, from- minNumberTOwer, i- minNumberTOwer, long.Parse(str[i])));
-                }
-            metki.AddRange(ret); numberOfPacket++;
-        }
 
 		public void Opros(int seances, int timeOut = 50){
             long now = (DateTime.Now - Tower.programmBegin).Ticks;
@@ -131,15 +114,17 @@ namespace DeltaCalc
 					}
 					if (metka.from-1 == i || metka.to-1 == i)
 					{
-						koef[ i, i]++;
-						if(metka.from-1 == i){
-							koef[i,metka.to-1]--;
-							solKoef[i] -= metka.time - parent.time - distance[i,metka.to-1];
-						}else{
-							koef[i,metka.from-1]--;
-							solKoef[i] -= 0 - metka.time + parent.time + distance[i,metka.from-1];
-						}
-
+                        koef[i, i]++;
+                        if (metka.from - 1 == i)
+                        {
+                            koef[i, metka.to - 1]--;
+                            solKoef[i] -= metka.time - parent.time - distance[i, metka.to - 1];
+                        }
+                        else
+                        {
+                            koef[i, metka.from - 1]--;
+                            solKoef[i] -= 0 - metka.time + parent.time + distance[i, metka.from - 1];
+                        }
                         //Console.WriteLine("Find {0} {1} -> [{2}{3}]++ \t [{4}{5}]--", metka.from, metka.to
                         //                                                             , i + 1, i + 1
                         //                  , i, (metka.from == i) ? metka.to : metka.from);
