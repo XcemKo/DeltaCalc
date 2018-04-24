@@ -43,6 +43,7 @@ namespace CsvParse
         private CultureInfo culture;
         double[,] koef;
         double[] solKoef;
+        double[] solveDelta;
 
         public CenterParser(List<Tower3> _tower) {
             numberOfPacket = 1;
@@ -52,6 +53,7 @@ namespace CsvParse
             metki = new List<MetkaNew>();
             koef = new double[towers.Count, towers.Count];
             solKoef = new double[towers.Count];
+            solveDelta = new double[towers.Count];
         }
 
         private Vector3 parseCoord(string[] str)
@@ -72,8 +74,8 @@ namespace CsvParse
                 if (str[i].Length != 0)
                 {
                     ret.Add(new MetkaNew(  numberOfPacket, 
-                                        i,
-                                        i,
+                                        i-2,
+                                        i-2,
                                         long.Parse(str[i]), 
                                         parseCoord(str)
                                         )
@@ -84,7 +86,7 @@ namespace CsvParse
             for (int i = firstTower + 1; i < 14; i++)
                 if (str[i].Length != 0)
                 {
-                    ret.Add(new MetkaNew(numberOfPacket, firstTower, i, long.Parse(str[i]), parseCoord(str)));
+                    ret.Add(new MetkaNew(numberOfPacket, firstTower-2, i-2, long.Parse(str[i]), parseCoord(str)));
                 }
             metki.AddRange(ret); numberOfPacket++;
         }
@@ -98,59 +100,94 @@ namespace CsvParse
         public void CalcKoef()
         {
             MetkaNew parent = new MetkaNew();
-            foreach (var metka in metki) {
-                
-                if (metka.from == metka.to)
-                {
-                    parent = metka;
-                    continue;
-                }
-                else
-                {
-                    koef[metka.from - 2, metka.from - 2]++;
-                    koef[metka.from -2, metka.to - 2]--;
-                    //koef[metka.to - 2, metka.from - 2]--;
-                    double c =      (   Vector3.Distance(parent.pos,towers[metka.from -2].position) - 
-                                        Vector3.Distance(parent.pos, towers[metka.to - 2].position)
-                                    ) / Other.LightSpeed;
-                    solKoef[metka.from - 2] += metka.time - parent.time - c;
-                }
+            //foreach (var metka in metki) {
 
+            //    if (metka.from == metka.to)
+            //    {
+            //        parent = metka;
+            //        continue;
+            //    }
+            //    else
+            //    {
+            //        koef[metka.from , metka.from ]++;
+            //        koef[metka.from , metka.to]--;
+            //        koef[metka.to , metka.from ]--;
+            //        double c =      (   Vector3.Distance(parent.pos,towers[metka.from].position) - 
+            //                            Vector3.Distance(parent.pos, towers[metka.to ].position)
+            //                        ) / Other.LightSpeed;
+            //        solKoef[metka.from ] += metka.time - parent.time - c;
+            //        //solKoef[[metka.to] -= 0 - metka.time + parent.time + c; //????????
+            //    }
+            //}
+
+
+            for (int i = 0; i < towers.Count; i++)
+            {
+                //MetkaNew parent = new MetkaNew();
+                foreach (var metka in metki)
+                {
+                    if (metka.from == metka.to)
+                    {
+                        parent = metka;
+                        continue;
+                    }
+                    if (metka.from == i || metka.to == i)
+                    {
+                        koef[i, i]++;
+                        if (metka.from == i)
+                        {
+                            koef[i, metka.to]--;
+                            double c = (Vector3.Distance(parent.pos, towers[metka.from].position) -
+                                                        Vector3.Distance(parent.pos, towers[metka.to ].position)
+                                                    ) / Other.LightSpeed;
+                            solKoef[i] -= metka.time - parent.time - c;
+                        }
+                        else
+                        {
+                            koef[i, metka.from]--;
+                            double c = (Vector3.Distance(parent.pos, towers[metka.from].position) -
+                                                        Vector3.Distance(parent.pos, towers[metka.to].position)
+                                                    ) / Other.LightSpeed;
+                            solKoef[i] -= 0 - metka.time + parent.time + c;
+                        }
+                        //Console.WriteLine("Find {0} {1} -> [{2}{3}]++ \t [{4}{5}]--", metka.from, metka.to
+                        //                                                             , i + 1, i + 1
+                        //                  , i, (metka.from == i) ? metka.to : metka.from);
+                    }
+                }
+                //Console.WriteLine();
+            }
+        }
+
+        public double[] Delta()
+        {
+            int size = towers.Count;
+            double[] ret = new double[size - 1];
+            double[,] tmpKoef = new double[size - 1, size - 1];
+            double[] solLow = new double[size - 1];
+            int smallSize = size - 1;
+            for (int i = 1; i < size; i++)
+            {
+                solLow[i - 1] = solKoef[i];
+                for (int j = 1; j < size; j++)
+                    tmpKoef[i - 1, j - 1] = koef[i, j];/*/(-2);*/
             }
 
-
-
-            //    int size = towers.Count + 2;
-            //for (int i = 2; i < size; i++)
-            //{
-            //    //MetkaNew parent = new MetkaNew();
-            //    foreach (var metka in metki)
-            //    {
-            //        if (metka.from == metka.to)
-            //        {
-            //            parent = metka;
-            //            continue;
-            //        }
-            //        if (metka.from - 1 == i || metka.to - 1 == i)
-            //        {
-            //            koef[i, i]++;
-            //            if (metka.from - 1 == i)
-            //            {
-            //                koef[i, metka.to - 1]--;
-            //                //solKoef[i] -= metka.time - parent.time - distance[i, metka.to - 1];
-            //            }
-            //            else
-            //            {
-            //                koef[i, metka.from - 1]--;
-            //                //solKoef[i] -= 0 - metka.time + parent.time + distance[i, metka.from - 1];
-            //            }
-            //            //Console.WriteLine("Find {0} {1} -> [{2}{3}]++ \t [{4}{5}]--", metka.from, metka.to
-            //            //                                                             , i + 1, i + 1
-            //            //                  , i, (metka.from == i) ? metka.to : metka.from);
-            //        }
-            //    }
-            //    //Console.WriteLine();
-            //}
+            Console.WriteLine("===============");
+            for (int i = 0; i < smallSize; i++)
+            {
+                for (int j = 0; j < smallSize; j++)
+                    Console.Write("{0}\t", tmpKoef[i, j]);
+                Console.WriteLine(solLow[i]);
+            }
+            int info = 0; alglib.densesolverreport reporter;
+            alglib.rmatrixsolve(tmpKoef, smallSize, solLow, out info, out reporter, out ret);
+            Console.Write("ret = [ ");
+            for (int i = 0; i < size - 1; i++) Console.Write("{0:00.0000}\t", ret[i]);
+            Console.WriteLine("] info - {0}",info);
+            for (int i = 1; i < size; i++)
+                solveDelta[i] = ret[i - 1];
+            return ret;
         }
 
         public void printKoef()
