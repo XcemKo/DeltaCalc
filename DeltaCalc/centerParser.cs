@@ -12,10 +12,10 @@ namespace CsvParse
     {
         public int packet;
         public int from, to;
-        public long time;
+        public double time;
         public Vector3 pos;
 
-        public MetkaNew(int _packet, int _from, int _to, long _time, Vector3 _pos)
+        public MetkaNew(int _packet, int _from, int _to, double _time, Vector3 _pos)
         {
             packet = _packet;
             from = _from;
@@ -63,6 +63,7 @@ namespace CsvParse
             float y = float.Parse(str[str.Length-2], culture);
             float z = float.Parse(str[str.Length-1], culture);
             ret.X = x; ret.Y = y; ret.Z = z;
+            //Console.Write("  {0}:{1}:{2}", x, y, z);
             return ret;
         }
 
@@ -73,6 +74,9 @@ namespace CsvParse
             for (int i = 2; i < 14; i++)
                 if (str[i].Length != 0)
                 {
+                    double num = double.Parse(str[i]);
+                    num = num / Math.Pow(2, 38);
+                    Console.Write("{0}:{1} ",i, num);
                     ret.Add(new MetkaNew(  numberOfPacket, 
                                         i-2,
                                         i-2,
@@ -86,9 +90,14 @@ namespace CsvParse
             for (int i = firstTower + 1; i < 14; i++)
                 if (str[i].Length != 0)
                 {
-                    ret.Add(new MetkaNew(numberOfPacket, firstTower-2, i-2, long.Parse(str[i]), parseCoord(str)));
+                    double num = double.Parse(str[i]);
+                    num = num / Math.Pow(2, 38);
+                    Console.Write("{0} ", num);
+                    ret.Add(new MetkaNew(numberOfPacket, firstTower-2, i-2, num, parseCoord(str)));
                 }
             metki.AddRange(ret); numberOfPacket++;
+            Console.Write("  {0}:{1}:{2}", parseCoord(str).X, parseCoord(str).Y, parseCoord(str).Z);
+            Console.WriteLine();
         }
 
         public void PrintAll() {

@@ -19,18 +19,19 @@ namespace CsvParse
     //}
 
     class Tower3 {
-        static private int id = 2;
+        static private int id = 1;
         private int privId;
-
+        private string name;
         public Vector3 position;
 
-        public Tower3(Vector3 _pos) {
+        public Tower3(Vector3 _pos, string _name) {
             privId = id++;
             position = _pos;
+            name = _name;
         }
 
         public void Print() {
-            Console.WriteLine("Tower #{0}\tpos - {1}", id, position.ToString());
+            Console.WriteLine("Tower #{0}\tpos - {1}", privId, position.ToString());
         }
 
     }

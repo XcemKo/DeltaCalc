@@ -83,30 +83,30 @@ namespace CsvParse
             cnt.Delta();
 
             cnt.Compare();*/
-            Vector2 coor1 = new Vector2(0, 0);          //src31_6
-            Vector2 coor2 = new Vector2(100, 100);      //src31_32
-            Vector2 coor3 = new Vector2(50, 130);       //src31_40
-            Vector2 coor4 = new Vector2(-150, -230);    //src31_130
-            Vector2 coor5 = new Vector2(50, -130);      //src31_132
-            Vector2 coor6 = new Vector2(0, -30);        //src31_134
+            Vector2 coor31_6    = new Vector2(-53296.00f, -13536.71f);          //src31_6
+            Vector2 coor31_32   = new Vector2( 10115.37f,   5723.23f);      //src31_32
+            Vector2 coor31_40   = new Vector2( -4341.66f, -64991.58f);       //src31_40
+            Vector2 coor31_130  = new Vector2( -5077.12f,  -6621.27f);    //src31_130
+            Vector2 coor31_132  = new Vector2( 13408.64f, -72532.50f);      //src31_132
+            Vector2 coor31_134  = new Vector2( 30351.28f,  -6309.96f);        //src31_134
             //! @fixme исправить координаты
-            Tower3 src31_6_0 = new Tower3(new Vector3(coor1, 54.2328f));
+            Tower3 src31_6_0 = new Tower3(new Vector3(coor31_6, -120.01f), nameof(src31_6_0));
 
-            Tower3 src31_32_0 = new Tower3( new Vector3(coor2, 33.374f));
-            Tower3 src31_32_1 = new Tower3( new Vector3(coor2, 33.374f));
-            Tower3 src31_32_2 = new Tower3( new Vector3(coor2, 33.374f));
-            Tower3 src31_32_3 = new Tower3( new Vector3(coor2, 33.374f));
+            Tower3 src31_32_0 = new Tower3( new Vector3(coor31_32, 43.66f), nameof(src31_32_0));
+            Tower3 src31_32_1 = new Tower3( new Vector3(coor31_32, 43.66f), nameof(src31_32_1));
+            Tower3 src31_32_2 = new Tower3( new Vector3(coor31_32, 43.66f), nameof(src31_32_2));
+            Tower3 src31_32_3 = new Tower3( new Vector3(coor31_32, 43.66f), nameof(src31_32_3));
 
-            Tower3 src31_40_0 = new Tower3( new Vector3(coor3, 75.16f));
+            Tower3 src31_40_0 = new Tower3( new Vector3(coor31_40, -198.50f), nameof(src31_40_0));
 
-            Tower3 src31_130_0 = new Tower3( new Vector3(coor4, 133.28f));
+            Tower3 src31_130_0 = new Tower3( new Vector3(coor31_130, 69.71f), nameof(src31_130_0));
 
-            Tower3 src31_132_0 = new Tower3( new Vector3(coor5, 116.82f));
-            Tower3 src31_132_1 = new Tower3( new Vector3(coor5, 116.82f));
-            Tower3 src31_132_2 = new Tower3( new Vector3(coor5, 116.82f));
-            Tower3 src31_132_3 = new Tower3( new Vector3(coor5, 116.82f));
+            Tower3 src31_132_0 = new Tower3( new Vector3(coor31_132, -333.65f), nameof(src31_132_0));
+            Tower3 src31_132_1 = new Tower3( new Vector3(coor31_132, -333.65f), nameof(src31_132_1));
+            Tower3 src31_132_2 = new Tower3( new Vector3(coor31_132, -333.65f), nameof(src31_132_2));
+            Tower3 src31_132_3 = new Tower3( new Vector3(coor31_132, -333.65f), nameof(src31_132_3));
 
-            Tower3 src31_134_0 = new Tower3( new Vector3(coor6, 91.83f));
+            Tower3 src31_134_0 = new Tower3( new Vector3(coor31_134, -41.90f), nameof(src31_134_0));
 
             List<Tower3> towers = new List<Tower3>
             {
@@ -127,9 +127,9 @@ namespace CsvParse
             CenterParser Cntr = new CenterParser(towers);
             var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
             culture.NumberFormat.NumberDecimalSeparator = ".";
-            Console.WriteLine(float.Parse("3.1488", culture));
-            //foreach (var tow in towers)
-            //    tow.Print();
+            //Console.WriteLine(float.Parse("3.1488", culture));
+            foreach (var tow in towers)
+                tow.Print();
             StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\log8clean.csv");
             fs.ReadLine();
             string tmp;
@@ -144,11 +144,11 @@ namespace CsvParse
                     if (i > 10) break;
                 }
             }
-            Cntr.PrintAll();
+            //Cntr.PrintAll();
             Cntr.CalcKoef();
 
             Cntr.printKoef();
-
+            Cntr.Delta();
 
 
 
