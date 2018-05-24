@@ -123,9 +123,16 @@ namespace CsvParse
                 src31_132_3,
                 src31_134_0
             };
+            int towersSize = towers.Count();
+            List<CenterParser> Cntrs = new List<CenterParser>{
+                new CenterParser(towers),
+                new CenterParser(towers),
+                new CenterParser(towers),
+                new CenterParser(towers),
+                new CenterParser(towers)
+             };
 
-            CenterParser Cntr = new CenterParser(towers);
-            var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
             culture.NumberFormat.NumberDecimalSeparator = ".";
             //Console.WriteLine(float.Parse("3.1488", culture));
             foreach (var tow in towers)
@@ -133,24 +140,38 @@ namespace CsvParse
             StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\log8clean.csv");
             fs.ReadLine();
             string tmp;
-            int i = 0;
+            int iter = 0; int j = 1;
+            const int lenghtPatch = 10;
             while (fs.Peek() != -1)
             {
                 tmp = fs.ReadLine();
                 string[] array = tmp.Split(',');
                 if (CheckLenght(array))
                 {
-                    Cntr.GetMetkiFromString(array); i++;
-                    if (i > 10) break;
+                    Cntrs[j-1].GetMetkiFromString(array); iter++;
+                    if (iter > lenghtPatch * j) j++;
+                    if (iter > Cntrs.Count() * lenghtPatch)
+                        break;
                 }
             }
             //Cntr.PrintAll();
-            Cntr.CalcKoef();
-
-            Cntr.printKoef();
-            Cntr.Delta();
-
-
+            double[,] deltas = new double[Cntrs.Count(), towersSize]; j = 0;
+            foreach (var cnt in Cntrs)
+            {
+                cnt.CalcKoef();
+                double[] tmpDelta = new double[towersSize];
+                tmpDelta = cnt.Delta();
+                for (int i = 0; i < towersSize; i++) {
+                    deltas[j, i] = tmpDelta[i];
+                }
+                j++;
+            }
+            for (int cntIter = 0; cntIter < Cntrs.Count; cntIter++)
+            {
+                for (int i = 0; i < towersSize; i++)
+                    Console.Write("{0:E2}\t", deltas[cntIter, i]);
+                Console.WriteLine();
+            }
 
             fs.Close();
         }

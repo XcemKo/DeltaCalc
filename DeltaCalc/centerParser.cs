@@ -76,11 +76,11 @@ namespace CsvParse
                 {
                     double num = double.Parse(str[i]);
                     num = num / Math.Pow(2, 38);
-                    Console.Write("{0}:{1} ",i, num);
+                    //Console.Write("{0}:{1} ",i, num);
                     ret.Add(new MetkaNew(  numberOfPacket, 
                                         i-2,
                                         i-2,
-                                        long.Parse(str[i]), 
+                                        num, 
                                         parseCoord(str)
                                         )
                            );
@@ -92,12 +92,12 @@ namespace CsvParse
                 {
                     double num = double.Parse(str[i]);
                     num = num / Math.Pow(2, 38);
-                    Console.Write("{0} ", num);
+                    //Console.Write("{0} ", num);
                     ret.Add(new MetkaNew(numberOfPacket, firstTower-2, i-2, num, parseCoord(str)));
                 }
             metki.AddRange(ret); numberOfPacket++;
-            Console.Write("  {0}:{1}:{2}", parseCoord(str).X, parseCoord(str).Y, parseCoord(str).Z);
-            Console.WriteLine();
+            //Console.Write("  {0}:{1}:{2}", parseCoord(str).X, parseCoord(str).Y, parseCoord(str).Z);
+           // Console.WriteLine();
         }
 
         public void PrintAll() {
@@ -159,55 +159,115 @@ namespace CsvParse
                                                     ) / Other.LightSpeed;
                             solKoef[i] -= 0 - metka.time + parent.time + c;
                         }
-                        //Console.WriteLine("Find {0} {1} -> [{2}{3}]++ \t [{4}{5}]--", metka.from, metka.to
-                        //                                                             , i + 1, i + 1
-                        //                  , i, (metka.from == i) ? metka.to : metka.from);
+                        Console.WriteLine("Find {0} {1} -> [{2}{3}]++ \t [{4}{5}]--", metka.from, metka.to
+                                                                                     , i + 1, i + 1
+                                          , i, (metka.from == i) ? metka.to : metka.from);
                     }
                 }
                 //Console.WriteLine();
             }
+            ;
+        }
+
+        private void deleteRowColumn( int index) {
+            int size = solKoef.Count();
+            for (int i = 0; i < size; i++)
+            {
+                ;
+                if (i < index)
+                    solKoef[i] = solKoef[i];
+                else if (i == index)
+                    continue;
+                else
+                    solKoef[i - 1] = solKoef[i];
+                for (int j = 0; j < size; j++)
+                {
+                    if (j < index)
+                        if (i < index)
+                            koef[i, j] = koef[i, j];
+                        else
+                            koef[i - 1, j] = koef[i, j];
+                    else if (j == index)
+                        ;
+                    else
+                    {
+                        if (i < index)
+                            koef[i, j - 1] = koef[i, j];
+                        else
+                            koef[i - 1, j - 1] = koef[i, j];
+                    }
+
+                }
+                /*/(-2);*/
+            }
+            for (int i = 0; i < size; i++)
+            {
+                koef[size - 1, i] = 0;
+                koef[i, size -1] = 0;
+            }
+            solKoef[size - 1] = 0;
         }
 
         public double[] Delta()
         {
             int size = towers.Count;
-            double[] ret = new double[size - 1];
+            double[] ret = new double[size];
             double[,] tmpKoef = new double[size - 1, size - 1];
             double[] solLow = new double[size - 1];
             int smallSize = size - 1;
-            for (int i = 1; i < size; i++)
-            {
-                solLow[i - 1] = solKoef[i];
-                for (int j = 1; j < size; j++)
-                    tmpKoef[i - 1, j - 1] = koef[i, j];/*/(-2);*/
-            }
 
-            Console.WriteLine("===============");
-            for (int i = 0; i < smallSize; i++)
-            {
-                for (int j = 0; j < smallSize; j++)
-                    Console.Write("{0}\t", tmpKoef[i, j]);
-                Console.WriteLine(solLow[i]);
-            }
+            deleteRowColumn(index:6);
+            
+            //Console.WriteLine("===============");
+            //printKoef(1);
+            double smallDiag = koef[0,0];
+            int index = 0;
+            for (int i = 1; i < size - 1; i++)
+                if (smallDiag > koef[i, i])
+                {
+                    index = i;
+                    smallDiag = koef[i, i];
+                }
+            index = 0;
+            deleteRowColumn(index);
+            Console.WriteLine("index = {0}===============", index);
+            printKoef(2);
+
             int info = 0; alglib.densesolverreport reporter;
-            alglib.rmatrixsolve(tmpKoef, smallSize, solLow, out info, out reporter, out ret);
+            alglib.rmatrixsolve(koef, size-2, solKoef, out info, out reporter, out ret);
+
+            if (index >= 6)
+                index++;
+
+            for (int i = 0; i < size-2; i++)
+                solveDelta[i] = ret[i];
+
+            for (int i = size-2; i > Math.Min(6, index); i--)
+                solveDelta[i] = solveDelta[i-1];
+            solveDelta[Math.Min(6, index)] = 0;
+            for (int i = size - 1; i > Math.Max(6, index); i--)
+                solveDelta[i] = solveDelta[i - 1];
+            solveDelta[Math.Max(6, index)] = 0;
             Console.Write("ret = [ ");
-            for (int i = 0; i < size - 1; i++) Console.Write("{0:00.0000}\t", ret[i]);
+            for (int i = 0; i < size; i++)
+                if(solveDelta[i] != 0)
+                    Console.Write("{0:.000_000_000}; ", solveDelta[i]);
+                else
+                    Console.Write("{0}; ",solveDelta[i]);
             Console.WriteLine("] info - {0}",info);
-            for (int i = 1; i < size; i++)
-                solveDelta[i] = ret[i - 1];
-            return ret;
+            
+            return solveDelta;
         }
 
-        public void printKoef()
+        public void printKoef(int minus = 0)
         {
             //CalcKoef();
             int size = towers.Count;
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < size - minus; i++)
             {
-                for (int j = 0; j < size; j++)
+                for (int j = 0; j < size - minus; j++)
                     Console.Write("{0}\t", koef[i, j]);
-                Console.WriteLine(solKoef[i]);
+                Console.WriteLine("| {0}", solKoef[i]);
             }
         }
     }
