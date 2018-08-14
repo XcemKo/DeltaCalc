@@ -44,6 +44,7 @@ namespace CsvParse
         double[,] koef;
         double[] solKoef;
         double[] solveDelta;
+        double[] fixedKoef;
 
         public CenterParser(List<Tower3> _tower) {
             numberOfPacket = 1;
@@ -54,6 +55,7 @@ namespace CsvParse
             koef = new double[towers.Count, towers.Count];
             solKoef = new double[towers.Count];
             solveDelta = new double[towers.Count];
+            fixedKoef = new double[towers.Count];
         }
 
         private Vector3 parseCoord(string[] str)
@@ -65,6 +67,18 @@ namespace CsvParse
             ret.X = x; ret.Y = y; ret.Z = z;
             //Console.Write("  {0}:{1}:{2}", x, y, z);
             return ret;
+        }
+
+        public void setKoef(double[] koef) {
+            fixedKoef = koef;
+        }
+
+        public void reset() {
+            metki = new List<MetkaNew>();
+            koef = new double[towers.Count, towers.Count];
+            solKoef = new double[towers.Count];
+            solveDelta = new double[towers.Count];
+            fixedKoef = new double[towers.Count];
         }
 
         public void GetMetkiFromString(string[] str)
@@ -80,7 +94,8 @@ namespace CsvParse
                     ret.Add(new MetkaNew(  numberOfPacket, 
                                         i-2,
                                         i-2,
-                                        num, 
+                                        //num,
+                                        num + fixedKoef[i - 2], 
                                         parseCoord(str)
                                         )
                            );
@@ -93,7 +108,12 @@ namespace CsvParse
                     double num = double.Parse(str[i]);
                     num = num / Math.Pow(2, 38);
                     //Console.Write("{0} ", num);
-                    ret.Add(new MetkaNew(numberOfPacket, firstTower-2, i-2, num, parseCoord(str)));
+                    ret.Add(new MetkaNew(   numberOfPacket,
+                                            firstTower-2, 
+                                            i-2, 
+                                            //num, 
+                                            num + fixedKoef[i - 2], 
+                                            parseCoord(str)));
                 }
             metki.AddRange(ret); numberOfPacket++;
             //Console.Write("  {0}:{1}:{2}", parseCoord(str).X, parseCoord(str).Y, parseCoord(str).Z);
@@ -159,9 +179,9 @@ namespace CsvParse
                                                     ) / Other.LightSpeed;
                             solKoef[i] -= 0 - metka.time + parent.time + c;
                         }
-                        Console.WriteLine("Find {0} {1} -> [{2}{3}]++ \t [{4}{5}]--", metka.from, metka.to
-                                                                                     , i + 1, i + 1
-                                          , i, (metka.from == i) ? metka.to : metka.from);
+                        //Console.WriteLine("Find {0} {1} -> [{2}{3}]++ \t [{4}{5}]--", metka.from, metka.to
+                        //                                                             , i + 1, i + 1
+                        //                  , i, (metka.from == i) ? metka.to : metka.from);
                     }
                 }
                 //Console.WriteLine();

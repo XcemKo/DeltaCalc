@@ -43,8 +43,8 @@ namespace CsvParse
                 t6 - t2
              */
             Console.WriteLine("Start");
-            /*
-            Tower t1 = new Tower(1, new Vector2(0, 0));
+
+            /*Tower t1 = new Tower(1, new Vector2(0, 0));
             Tower t2 = new Tower(2, new Vector2(100, 100));
             Tower t3 = new Tower(3, new Vector2(-80, 70));
             Tower t4 = new Tower(4, new Vector2(50, -130));
@@ -83,30 +83,30 @@ namespace CsvParse
             cnt.Delta();
 
             cnt.Compare();*/
-            Vector2 coor31_6    = new Vector2(-53296.00f, -13536.71f);          //src31_6
-            Vector2 coor31_32   = new Vector2( 10115.37f,   5723.23f);      //src31_32
-            Vector2 coor31_40   = new Vector2( -4341.66f, -64991.58f);       //src31_40
-            Vector2 coor31_130  = new Vector2( -5077.12f,  -6621.27f);    //src31_130
-            Vector2 coor31_132  = new Vector2( 13408.64f, -72532.50f);      //src31_132
-            Vector2 coor31_134  = new Vector2( 30351.28f,  -6309.96f);        //src31_134
+            Vector2 coor31_6 = new Vector2(-53296.00f, -13536.71f);          //src31_6
+            Vector2 coor31_32 = new Vector2(10115.37f, 5723.23f);      //src31_32
+            Vector2 coor31_40 = new Vector2(-4341.66f, -64991.58f);       //src31_40
+            Vector2 coor31_130 = new Vector2(-5077.12f, -6621.27f);    //src31_130
+            Vector2 coor31_132 = new Vector2(13408.64f, -72532.50f);      //src31_132
+            Vector2 coor31_134 = new Vector2(30351.28f, -6309.96f);        //src31_134
             //! @fixme исправить координаты
             Tower3 src31_6_0 = new Tower3(new Vector3(coor31_6, -120.01f), nameof(src31_6_0));
 
-            Tower3 src31_32_0 = new Tower3( new Vector3(coor31_32, 43.66f), nameof(src31_32_0));
-            Tower3 src31_32_1 = new Tower3( new Vector3(coor31_32, 43.66f), nameof(src31_32_1));
-            Tower3 src31_32_2 = new Tower3( new Vector3(coor31_32, 43.66f), nameof(src31_32_2));
-            Tower3 src31_32_3 = new Tower3( new Vector3(coor31_32, 43.66f), nameof(src31_32_3));
+            Tower3 src31_32_0 = new Tower3(new Vector3(coor31_32, 43.66f), nameof(src31_32_0));
+            Tower3 src31_32_1 = new Tower3(new Vector3(coor31_32, 43.66f), nameof(src31_32_1));
+            Tower3 src31_32_2 = new Tower3(new Vector3(coor31_32, 43.66f), nameof(src31_32_2));
+            Tower3 src31_32_3 = new Tower3(new Vector3(coor31_32, 43.66f), nameof(src31_32_3));
 
-            Tower3 src31_40_0 = new Tower3( new Vector3(coor31_40, -198.50f), nameof(src31_40_0));
+            Tower3 src31_40_0 = new Tower3(new Vector3(coor31_40, -198.50f), nameof(src31_40_0));
 
-            Tower3 src31_130_0 = new Tower3( new Vector3(coor31_130, 69.71f), nameof(src31_130_0));
+            Tower3 src31_130_0 = new Tower3(new Vector3(coor31_130, 69.71f), nameof(src31_130_0));
 
-            Tower3 src31_132_0 = new Tower3( new Vector3(coor31_132, -333.65f), nameof(src31_132_0));
-            Tower3 src31_132_1 = new Tower3( new Vector3(coor31_132, -333.65f), nameof(src31_132_1));
-            Tower3 src31_132_2 = new Tower3( new Vector3(coor31_132, -333.65f), nameof(src31_132_2));
-            Tower3 src31_132_3 = new Tower3( new Vector3(coor31_132, -333.65f), nameof(src31_132_3));
+            Tower3 src31_132_0 = new Tower3(new Vector3(coor31_132, -333.65f), nameof(src31_132_0));
+            Tower3 src31_132_1 = new Tower3(new Vector3(coor31_132, -333.65f), nameof(src31_132_1));
+            Tower3 src31_132_2 = new Tower3(new Vector3(coor31_132, -333.65f), nameof(src31_132_2));
+            Tower3 src31_132_3 = new Tower3(new Vector3(coor31_132, -333.65f), nameof(src31_132_3));
 
-            Tower3 src31_134_0 = new Tower3( new Vector3(coor31_134, -41.90f), nameof(src31_134_0));
+            Tower3 src31_134_0 = new Tower3(new Vector3(coor31_134, -41.90f), nameof(src31_134_0));
 
             List<Tower3> towers = new List<Tower3>
             {
@@ -132,47 +132,140 @@ namespace CsvParse
                 new CenterParser(towers)
              };
 
-                var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+            CenterParser calcCenter = new CenterParser(towers);
+            CenterParser checkCenter1 = new CenterParser(towers);
+            CenterParser checkCenter2 = new CenterParser(towers);
+
+            var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
             culture.NumberFormat.NumberDecimalSeparator = ".";
             //Console.WriteLine(float.Parse("3.1488", culture));
             foreach (var tow in towers)
                 tow.Print();
+
+            double[] deltas = new double[towersSize];
             StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\log8clean.csv");
+            FileStream file = new FileStream("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\test.txt", FileMode.Create, FileAccess.ReadWrite);
+            StreamWriter writer = new StreamWriter(file);
             fs.ReadLine();
             string tmp;
-            int iter = 0; int j = 1;
-            const int lenghtPatch = 10;
+            int i = 0; int iter = 0; // 10
+            repeat:
+            i = 0;
             while (fs.Peek() != -1)
             {
                 tmp = fs.ReadLine();
                 string[] array = tmp.Split(',');
                 if (CheckLenght(array))
                 {
-                    Cntrs[j-1].GetMetkiFromString(array); iter++;
-                    if (iter > lenghtPatch * j) j++;
-                    if (iter > Cntrs.Count() * lenghtPatch)
-                        break;
+                    calcCenter.GetMetkiFromString(array); i++;
+                    if (i > 1000) break;
                 }
             }
-            //Cntr.PrintAll();
-            double[,] deltas = new double[Cntrs.Count(), towersSize]; j = 0;
-            foreach (var cnt in Cntrs)
+            calcCenter.CalcKoef();
+            deltas = calcCenter.Delta();
+            for (int j = 0; j < towersSize; j++)
             {
-                cnt.CalcKoef();
-                double[] tmpDelta = new double[towersSize];
-                tmpDelta = cnt.Delta();
-                for (int i = 0; i < towersSize; i++) {
-                    deltas[j, i] = tmpDelta[i];
-                }
-                j++;
+                writer.Write("{0:E2}\t", deltas[j]);
             }
-            for (int cntIter = 0; cntIter < Cntrs.Count; cntIter++)
-            {
-                for (int i = 0; i < towersSize; i++)
-                    Console.Write("{0:E2}\t", deltas[cntIter, i]);
-                Console.WriteLine();
-            }
+            writer.WriteLine();
+            calcCenter.reset();
+            if (iter++ < 20)  
+                goto repeat;
+            return;
 
+
+
+            while (fs.Peek() != -1)
+            {
+                tmp = fs.ReadLine();
+                string[] array = tmp.Split(',');
+                if (CheckLenght(array))
+                {
+                    calcCenter.GetMetkiFromString(array); i++;
+                    if (i > 10000) break;
+                }
+            }
+            calcCenter.CalcKoef();
+            deltas = calcCenter.Delta();
+            checkCenter1.setKoef(deltas);
+            writer.WriteLine("Первый расчет");
+            for (int j = 0; j < towersSize; j++)
+            {
+                writer.Write("{0:E2}\t", deltas[j]);
+            }
+            writer.WriteLine();
+            i = 0;
+            while (fs.Peek() != -1)
+            {
+                tmp = fs.ReadLine();
+                string[] array = tmp.Split(',');
+                if (CheckLenght(array))
+                {
+                    checkCenter1.GetMetkiFromString(array);
+                    checkCenter2.GetMetkiFromString(array);
+                    i++;
+                    if (i > 100) break;
+                }
+            }
+            checkCenter2.CalcKoef();
+            deltas = checkCenter2.Delta();
+            writer.WriteLine("Без поправки расчет");
+            for (int j = 0; j < towersSize; j++)
+            {
+                writer.Write("{0:E2}\t", deltas[j]);
+            }
+            writer.WriteLine();
+            checkCenter1.CalcKoef();
+            deltas = checkCenter1.Delta();
+            writer.WriteLine("С поправкой расчет");
+            for (int j = 0; j < towersSize; j++)
+            {
+                writer.Write("{0:E2}\t", deltas[j]);
+            }
+            writer.WriteLine();
+
+            //int iter = 0; int j = 1;
+            //const int lenghtPatch = 10;
+            //while (fs.Peek() != -1)
+            //{
+            //    tmp = fs.ReadLine();
+            //    string[] array = tmp.Split(',');
+            //    if (CheckLenght(array))
+            //    {
+            //        Cntrs[j-1].GetMetkiFromString(array); iter++;
+            //        if (iter > lenghtPatch * j) j++;
+            //        if (iter > Cntrs.Count() * lenghtPatch)
+            //            break;
+            //    }
+            //}
+            ////Cntr.PrintAll();
+            //double[,] deltas = new double[Cntrs.Count(), towersSize]; j = 0;
+            //foreach (var cnt in Cntrs)
+            //{
+            //    cnt.CalcKoef();
+            //    double[] tmpDelta = new double[towersSize];
+            //    tmpDelta = cnt.Delta();
+            //    for (int i = 0; i < towersSize; i++) {
+            //        deltas[j, i] = tmpDelta[i];
+            //    }
+            //    j++;
+            //}
+
+            //FileStream file = new FileStream("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\test.txt", FileMode.Create, FileAccess.ReadWrite);
+            //StreamWriter writer = new StreamWriter(file);
+
+            //for (int cntIter = 0; cntIter < Cntrs.Count; cntIter++)
+            //{
+            //    for (int i = 0; i < towersSize; i++)
+            //    {
+            //        Console.Write("{0:E2}\t", deltas[cntIter, i]);
+            //        writer.Write("{0:E2}\t", deltas[cntIter, i]);
+            //    }
+            //    Console.WriteLine();
+            //    writer.WriteLine();
+            //}
+            writer.Close();
+            file.Close();
             fs.Close();
         }
 
